@@ -1,0 +1,86 @@
+@model Tierra.Models.Tenant
+@inject Tierra.Data.TierraDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+@{
+    var teamMembers = await DbContext.Users.Where(u => u.TenantId == Model.Id).ToListAsync();
+}
+
+<div class="mb-4">
+    <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-semibold mb-2">Workspace Administration</span>
+    <h2 class="fw-bold">👥 @Model.Name Team & Workspace Operations</h2>
+    <p class="text-muted">Manage your organization's roster, permissions, and workspace profile.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold mb-2">TEAM SIZE</h6>
+                <h2 class="fw-bold text-primary mb-1">@teamMembers.Count</h2>
+                <small class="text-muted">Active members in this tenant</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold mb-2">ORGANIZATION SLUG</h6>
+                <h4 class="fw-bold text-dark mb-1"><code>@(Model.Slug).tierra.com</code></h4>
+                <small class="text-muted">Public organization domain</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold mb-2">JOINED TIERRA</h6>
+                <h4 class="fw-bold text-dark mb-1">@Model.CreatedAt.ToString("MMM dd, yyyy")</h4>
+                <small class="text-muted">Account provisioning date</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Team Roster Table -->
+<div class="card shadow-sm border-0 rounded-3">
+    <div class="card-header bg-white py-3 border-0 d-flex justify-content-between align-items-center">
+        <h5 class="fw-bold mb-0">Team Members</h5>
+        <span class="badge bg-light text-muted border">Filtered strictly by TenantId</span>
+    </div>
+    <div class="table-responsive">
+        <table class="table table-hover align-middle mb-0">
+            <thead class="table-light">
+                <tr>
+                    <th class="ps-4">Name</th>
+                    <th>Email</th>
+                    <th>Assigned Role</th>
+                    <th>Joined</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var member in teamMembers)
+                {
+                    <tr>
+                        <td class="ps-4 fw-semibold">👤 @member.FullName</td>
+                        <td class="text-muted">@member.Email</td>
+                        <td>
+                            @if (member.Role == Tierra.Models.TenantRole.Owner)
+                            {
+                                <span class="badge bg-primary">Owner</span>
+                            }
+                            else if (member.Role == Tierra.Models.TenantRole.Admin)
+                            {
+                                <span class="badge bg-info text-dark">Admin</span>
+                            }
+                            else
+                            {
+                                <span class="badge bg-secondary">End User</span>
+                            }
+                        </td>
+                        <td class="text-muted small">@member.CreatedAt.ToString("MMM dd, yyyy")</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

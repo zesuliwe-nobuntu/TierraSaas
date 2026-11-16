@@ -1,0 +1,54 @@
+@model Tierra.Models.Tenant
+
+<div class="mb-4">
+    <span class="badge bg-secondary px-3 py-2 rounded-pill fw-semibold mb-2">Member Workspace</span>
+    <h2 class="fw-bold">👋 Welcome to @Model.Name</h2>
+    <p class="text-muted">Your day-to-day workspace portal on Tierra.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- User Profile Card -->
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <div class="d-flex align-items-center mb-3">
+                    <span class="fs-1 me-3">👤</span>
+                    <div>
+                        <h4 class="fw-bold mb-0">@User.Identity?.Name</h4>
+                        <span class="badge bg-secondary">End User</span>
+                    </div>
+                </div>
+                <hr />
+                <p class="mb-2 text-muted"><strong>Workspace:</strong> @Model.Name</p>
+                <p class="mb-0 text-muted"><strong>Portal:</strong> <code>@(Model.Slug).tierra.com</code></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Tools Card -->
+    <div class="col-md-6">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">💳 Workspace Billing & Plan</h5>
+                    <span class="badge bg-success">@Model.Subscription?.Status</span>
+                </div>
+                <p class="text-muted small">Subscription details and invoices for <strong>@Model.Name</strong>.</p>
+                
+                <div class="p-3 bg-light rounded-3 mb-3">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="fw-semibold">@Model.Subscription?.Tier Plan</span>
+                        <span class="fw-bold text-primary">R@(Model.Subscription?.MonthlyPrice.ToString("N2")) <small class="text-muted">/mo</small></span>
+                    </div>
+                    <small class="text-muted">Renewal: @Model.Subscription?.CurrentPeriodEnd.ToString("MMM dd, yyyy")</small>
+                </div>
+
+                <div class="mt-auto">
+                    <a asp-controller="Billing" asp-action="Index" class="btn btn-outline-primary w-100">
+                        📄 View Invoices & Manage Plans &rarr;
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

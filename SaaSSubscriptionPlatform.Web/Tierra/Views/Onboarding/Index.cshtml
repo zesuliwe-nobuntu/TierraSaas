@@ -1,0 +1,74 @@
+@model Tierra.Models.OnboardTenantViewModel
+@{
+    ViewData["Title"] = "Create your Tierra Workspace";
+}
+
+<div class="row justify-content-center mt-4">
+    <div class="col-md-7 col-lg-6">
+        <div class="card shadow border-0 rounded-3">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="fs-1">🌍</span>
+                    <h2 class="fw-bold text-primary mt-2">Tierra</h2>
+                    <p class="text-muted">Register your business & set up your Owner account</p>
+                </div>
+
+                <form asp-action="Index" method="post">
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <!-- Business Info -->
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3">1. Business Details</h5>
+                    
+                    <div class="mb-3">
+                        <label asp-for="CompanyName" class="form-label fw-semibold"></label>
+                        <input asp-for="CompanyName" class="form-control" placeholder="e.g. Acme Corporation" autofocus />
+                        <span asp-validation-for="CompanyName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Slug" class="form-label fw-semibold"></label>
+                        <div class="input-group">
+                            <input asp-for="Slug" class="form-control" placeholder="acme" />
+                            <span class="input-group-text text-muted bg-light">.tierra.com</span>
+                        </div>
+                        <span asp-validation-for="Slug" class="text-danger small"></span>
+                        <div class="form-text">Unique URL identifier for your tenant workspace.</div>
+                    </div>
+
+                    <!-- Owner Account Info -->
+                    <h5 class="fw-bold text-dark border-bottom pb-2 mb-3 mt-4">2. Workspace Owner Account</h5>
+
+                    <div class="mb-3">
+                        <label asp-for="OwnerFullName" class="form-label fw-semibold"></label>
+                        <input asp-for="OwnerFullName" class="form-control" placeholder="e.g. Sarah Connor" />
+                        <span asp-validation-for="OwnerFullName" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="OwnerEmail" class="form-label fw-semibold"></label>
+                        <input asp-for="OwnerEmail" class="form-control" placeholder="sarah@acme.com" />
+                        <span asp-validation-for="OwnerEmail" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4">
+                        <label asp-for="Password" class="form-label fw-semibold"></label>
+                        <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                        <div class="form-text">At least 6 characters.</div>
+                    </div>
+
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" class="btn btn-primary btn-lg">Create Workspace & Owner Account</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer bg-light text-center py-3">
+                <small class="text-muted">Already have an account? <a asp-controller="Account" asp-action="Login" class="text-decoration-none">Log in</a></small>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

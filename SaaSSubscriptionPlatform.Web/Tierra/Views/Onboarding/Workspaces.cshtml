@@ -1,0 +1,73 @@
+@model IEnumerable<Tierra.Models.Tenant>
+@inject Tierra.Services.ITenantService TenantService
+@{
+    ViewData["Title"] = "Tierra Workspaces";
+    var activeTenantId = TenantService.GetTenantId();
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold">🌍 Tierra Workspaces</h2>
+            <p class="text-muted">Switch between tenant organizations to demonstrate multi-tenant data isolation.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-primary px-3">+ New Workspace</a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="card shadow-sm border-0 p-5 text-center">
+            <h4 class="text-muted">No workspaces found</h4>
+            <p class="text-muted">Register your first business to get started.</p>
+            <div class="mt-3">
+                <a asp-action="Index" class="btn btn-primary">Create Your First Workspace</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var tenant in Model)
+            {
+                var isCurrent = activeTenantId.HasValue && activeTenantId.Value == tenant.Id;
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm border-@(isCurrent ? "primary border-2 shadow" : "0")">
+                        <div class="card-body p-4 d-flex flex-column">
+                            <div class="d-flex justify-content-between align-items-start mb-2">
+                                <h5 class="card-title fw-bold mb-0">@tenant.Name</h5>
+                                @if (isCurrent)
+                                {
+                                    <span class="badge bg-primary px-2 py-1">Active</span>
+                                }
+                            </div>
+                            <p class="text-muted small mb-3"><code>@(tenant.Slug).tierra.com</code></p>
+                            
+                            <div class="mb-3">
+                                <span class="badge bg-light text-dark border">
+                                    Tier: <strong>@(tenant.Subscription?.Tier.ToString() ?? "Free")</strong>
+                                </span>
+                                <span class="badge bg-light text-dark border">
+                                    Price: <strong>R@(tenant.Subscription?.MonthlyPrice.ToString("N2") ?? "0.00")/mo</strong>
+                                </span>
+                            </div>
+
+                            <small class="text-muted mb-4 mt-auto">Joined: @tenant.CreatedAt.ToString("MMM dd, yyyy")</small>
+
+                            @if (!isCurrent)
+                            {
+                                <form asp-action="Switch" method="post">
+                                    <input type="hidden" name="tenantId" value="@tenant.Id" />
+                                    <button type="submit" class="btn btn-outline-primary w-100">Switch into Workspace</button>
+                                </form>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary w-100" disabled>Currently Inside</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

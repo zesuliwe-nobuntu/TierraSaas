@@ -1,0 +1,159 @@
+@inject Tierra.Services.ITenantService TenantService
+@inject Tierra.Data.TierraDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+@{
+    ViewData["Title"] = User.Identity?.IsAuthenticated == true ? "Dashboard" : "Welcome to Tierra";
+    var isAuthenticated = User.Identity?.IsAuthenticated == true;
+    
+    Tierra.Models.Tenant? activeTenant = null;
+    if (isAuthenticated)
+    {
+        var activeTenantId = TenantService.GetTenantId();
+        if (activeTenantId.HasValue)
+        {
+            activeTenant = DbContext.Tenants
+                .Include(t => t.Subscription)
+                .Include(t => t.Invoices)
+                .FirstOrDefault(t => t.Id == activeTenantId.Value);
+        }
+    }
+}
+
+@if (!isAuthenticated)
+{
+    <!-- ========================================== -->
+    <!-- PUBLIC WELCOME & MARKETING LANDING PAGE    -->
+    <!-- ========================================== -->
+    <div class="py-5">
+        <!-- Hero Section -->
+        <div class="text-center py-5">
+            <span class="badge bg-info text-dark px-3 py-2 rounded-pill fw-semibold mb-3">Enterprise Multi-Tenant SaaS Platform</span>
+            <h1 class="display-4 fw-bold text-dark mb-3">
+                Ground Your SaaS Business on <br />
+                <span class="text-primary">Solid Billing Infrastructure.</span>
+            </h1>
+            <p class="lead text-muted mx-auto mb-4" style="max-width: 720px;">
+                Tierra provides single-database multi-tenant isolation, automated recurring billing in South African Rands (ZAR), and autonomous background workers orchestrating lifecycle events.
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <a asp-controller="Onboarding" asp-action="Index" class="btn btn-primary btn-lg px-4 shadow-sm">
+                    🚀 Start Free Workspace
+                </a>
+                <a asp-controller="Account" asp-action="Login" class="btn btn-outline-dark btn-lg px-4">
+                    🔑 Sign In to Workspace
+                </a>
+            </div>
+        </div>
+
+        <!-- 3 Core Architecture Pillars -->
+        <div class="row g-4 my-5">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-3 p-4">
+                    <div class="fs-1 mb-3">🛡️</div>
+                    <h4 class="fw-bold mb-2">Zero-Leak Multi-Tenancy</h4>
+                    <p class="text-muted small">
+                        Every tenant gets an isolated plot of land. Enforced by EF Core Global Query Filters that auto-append <code>WHERE TenantId = @@id</code> behind the scenes.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-3 p-4">
+                    <div class="fs-1 mb-3">💳</div>
+                    <h4 class="fw-bold mb-2">Recurring ZAR Billing</h4>
+                    <p class="text-muted small">
+                        Complete subscription lifecycle (Free, Pro at R499, Enterprise at R1,999) with simulated payment gateway webhooks and stamped invoice ledgers.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm border-0 rounded-3 p-4">
+                    <div class="fs-1 mb-3">⚡</div>
+                    <h4 class="fw-bold mb-2">Hangfire Background Engine</h4>
+                    <p class="text-muted small">
+                        Autonomous background processing powered by Microsoft SQL Server storage. Scans across tenants to handle subscription expirations and recurring renewals.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <!-- ZAR Pricing Preview -->
+        <div class="text-center my-5">
+            <h3 class="fw-bold">Transparent Plans in South African Rands</h3>
+            <p class="text-muted">Start free and scale seamlessly as your customer base expands.</p>
+
+            <div class="row row-cols-1 row-cols-md-3 g-4 mt-2">
+                <div class="col">
+                    <div class="card shadow-sm border-0 rounded-3 p-4">
+                        <h5 class="fw-bold">Free</h5>
+                        <h2 class="fw-bold my-2">R0.00</h2>
+                        <p class="text-muted small">100 API requests/day, community support</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow border-primary border-2 rounded-3 p-4 position-relative">
+                        <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-info text-dark px-3 py-1">POPULAR</span>
+                        <h5 class="fw-bold text-primary">Pro</h5>
+                        <h2 class="fw-bold my-2 text-primary">R499.00 <small class="fs-6 text-muted">/mo</small></h2>
+                        <p class="text-muted small">Unlimited requests, automated webhooks, priority support</p>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card shadow-sm border-0 rounded-3 p-4">
+                        <h5 class="fw-bold">Enterprise</h5>
+                        <h2 class="fw-bold my-2">R1,999.00 <small class="fs-6 text-muted">/mo</small></h2>
+                        <p class="text-muted small">Dedicated account manager, 99.99% SLA, custom webhooks</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bottom CTA -->
+        <div class="card bg-dark text-light p-5 rounded-3 text-center my-5 shadow">
+            <h2 class="fw-bold mb-3">Ready to ground your SaaS architecture?</h2>
+            <p class="text-muted mb-4">Create your first business workspace and test multi-tenant data isolation in seconds.</p>
+            <div>
+                <a asp-controller="Onboarding" asp-action="Index" class="btn btn-info btn-lg px-4 fw-semibold">
+                    Create Workspace Now &rarr;
+                </a>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <!-- ========================================== -->
+    <!-- LOGGED IN: DYNAMIC ROLE-BASED DASHBOARD    -->
+    <!-- ========================================== -->
+    if (activeTenant == null)
+    {
+        <div class="card shadow-sm border-0 p-5 text-center mt-4">
+            <span class="fs-1 mb-2">🏢</span>
+            <h2 class="fw-bold">No Active Workspace Found</h2>
+            <p class="text-muted">You are authenticated, but no active tenant workspace is associated with your account.</p>
+            <div class="d-flex justify-content-center gap-3 mt-3">
+                <a asp-controller="Onboarding" asp-action="Index" class="btn btn-primary btn-lg">+ Create New Workspace</a>
+                <a asp-controller="Onboarding" asp-action="Workspaces" class="btn btn-outline-secondary btn-lg">Browse Workspaces</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        <!-- Dynamically dispatch to the specific Persona Dashboard -->
+        if (User.IsInRole("ITManager"))
+        {
+            <partial name="_DashboardITManager" model="activeTenant" />
+        }
+        else if (User.IsInRole("Owner"))
+        {
+            <partial name="_DashboardOwner" model="activeTenant" />
+        }
+        else if (User.IsInRole("Admin"))
+        {
+            <partial name="_DashboardAdmin" model="activeTenant" />
+        }
+        else
+        {
+            <partial name="_DashboardEndUser" model="activeTenant" />
+        }
+    }
+}

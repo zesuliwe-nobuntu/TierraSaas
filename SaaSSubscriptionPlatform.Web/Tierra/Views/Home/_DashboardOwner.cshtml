@@ -1,0 +1,55 @@
+@model Tierra.Models.Tenant
+
+<div class="mb-4">
+    <span class="badge bg-primary px-3 py-2 rounded-pill fw-semibold mb-2">Executive Overview</span>
+    <h2 class="fw-bold">💼 @Model.Name Executive Portal</h2>
+    <p class="text-muted">Financial health, subscription plan in ZAR, and billing ledger.</p>
+</div>
+
+<div class="row g-4 mb-4">
+    <!-- Current Plan Card -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 d-flex flex-column">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="text-muted fw-bold mb-0">ACTIVE PLAN</h6>
+                    <span class="badge bg-success">@Model.Subscription?.Status</span>
+                </div>
+                <h3 class="fw-bold text-primary mb-1">@Model.Subscription?.Tier Plan</h3>
+                <h2 class="fw-bold text-dark mb-3">R@(Model.Subscription?.MonthlyPrice.ToString("N2")) <small class="text-muted fs-6">/ month</small></h2>
+                
+                <p class="small text-muted mb-4 mt-auto">
+                    Next Billing Date: <strong>@Model.Subscription?.CurrentPeriodEnd.ToString("MMM dd, yyyy")</strong>
+                </p>
+                <a asp-controller="Billing" asp-action="Index" class="btn btn-primary w-100">Manage Subscription &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoices Summary -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4 d-flex flex-column">
+                <h6 class="text-muted fw-bold mb-3">INVOICE HISTORY</h6>
+                <h2 class="fw-bold text-dark mb-1">@Model.Invoices.Count</h2>
+                <p class="text-muted small mb-4">Total invoices paid to date</p>
+                <span class="badge bg-info text-dark mb-3 align-self-start">Data Isolated per Tenant</span>
+                <a asp-controller="Billing" asp-action="Index" class="btn btn-outline-secondary w-100 mt-auto">View All Invoices &rarr;</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Multi-Tenant Plot Info -->
+    <div class="col-md-6 col-lg-4">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold mb-3">WORKSPACE METADATA</h6>
+                <p class="small text-muted mb-1">Workspace Slug:</p>
+                <p><code>@(Model.Slug).tierra.com</code></p>
+                <p class="small text-muted mb-1">Tenant ID:</p>
+                <p><code class="text-break small">@Model.Id</code></p>
+                <span class="badge bg-primary">EF Core Query Filter Active</span>
+            </div>
+        </div>
+    </div>
+</div>

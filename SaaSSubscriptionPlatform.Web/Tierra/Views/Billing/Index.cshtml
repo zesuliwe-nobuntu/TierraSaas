@@ -1,0 +1,193 @@
+@model Tierra.Models.Subscription
+@{
+    ViewData["Title"] = "Subscription & Plans";
+    var invoices = ViewBag.Invoices as List<Tierra.Models.Invoice> ?? new List<Tierra.Models.Invoice>();
+    var currentTier = Model?.Tier ?? Tierra.Models.SubscriptionTier.Free;
+}
+
+<div class="py-3">
+    <!-- Header -->
+    <div class="text-center mb-5">
+        <span class="badge bg-info text-dark px-3 py-2 mb-2 rounded-pill fw-semibold">SaaS Billing Engine</span>
+        <h2 class="fw-bold display-6">Subscription & Plans</h2>
+        <p class="text-muted fs-5">Ground your SaaS business on solid billing infrastructure.</p>
+    </div>
+
+    <!-- Pricing Cards -->
+    <div class="row row-cols-1 row-cols-md-3 g-4 mb-5">
+        <!-- Free Tier -->
+        <div class="col">
+            <div class="card h-100 shadow-sm border-@(currentTier == Tierra.Models.SubscriptionTier.Free ? "primary border-2" : "0") rounded-3">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="fw-bold mb-0">Free</h4>
+                        @if (currentTier == Tierra.Models.SubscriptionTier.Free)
+                        {
+                            <span class="badge bg-primary">Current Plan</span>
+                        }
+                    </div>
+                    <p class="text-muted small">Ideal for testing and local exploration.</p>
+                    <div class="my-3">
+                        <h2 class="fw-bold text-dark mb-0">R0.00</h2>
+                        <small class="text-muted">Forever free</small>
+                    </div>
+                    <ul class="list-unstyled my-3 small text-muted flex-grow-1">
+                        <li class="mb-2">✔ 100 API requests / day</li>
+                        <li class="mb-2">✔ Shared tenant plot</li>
+                        <li class="mb-2">✔ Community support</li>
+                    </ul>
+
+                    @if (currentTier == Tierra.Models.SubscriptionTier.Free)
+                    {
+                        <button class="btn btn-secondary w-100" disabled>Active Plan</button>
+                    }
+                    else
+                    {
+                        <form asp-action="ChangePlan" method="post">
+                            <input type="hidden" name="targetTier" value="Free" />
+                            <button type="submit" class="btn btn-outline-secondary w-100">Downgrade to Free</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Pro Tier -->
+        <div class="col">
+            <div class="card h-100 shadow border-@(currentTier == Tierra.Models.SubscriptionTier.Pro ? "primary border-2" : "info border-1") rounded-3 position-relative">
+                <span class="position-absolute top-0 start-50 translate-middle badge rounded-pill bg-info text-dark px-3 py-2">
+                    MOST POPULAR
+                </span>
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2 mt-2">
+                        <h4 class="fw-bold mb-0 text-primary">Pro</h4>
+                        @if (currentTier == Tierra.Models.SubscriptionTier.Pro)
+                        {
+                            <span class="badge bg-primary">Current Plan</span>
+                        }
+                    </div>
+                    <p class="text-muted small">For growing SaaS products with production traffic.</p>
+                    <div class="my-3">
+                        <h2 class="fw-bold text-dark mb-0">R499.00</h2>
+                        <small class="text-muted">billed monthly in ZAR</small>
+                    </div>
+                    <ul class="list-unstyled my-3 small flex-grow-1">
+                        <li class="mb-2">✔ Unlimited API requests</li>
+                        <li class="mb-2">✔ Automated billing webhooks</li>
+                        <li class="mb-2">✔ Priority email support</li>
+                        <li class="mb-2">✔ 99.9% availability SLA</li>
+                    </ul>
+
+                    @if (currentTier == Tierra.Models.SubscriptionTier.Pro)
+                    {
+                        <button class="btn btn-secondary w-100" disabled>Active Plan</button>
+                    }
+                    else
+                    {
+                        <form asp-action="ChangePlan" method="post">
+                            <input type="hidden" name="targetTier" value="Pro" />
+                            <button type="submit" class="btn btn-primary w-100">Upgrade to Pro</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Enterprise Tier -->
+        <div class="col">
+            <div class="card h-100 shadow-sm border-@(currentTier == Tierra.Models.SubscriptionTier.Enterprise ? "primary border-2" : "0") rounded-3">
+                <div class="card-body p-4 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <h4 class="fw-bold mb-0">Enterprise</h4>
+                        @if (currentTier == Tierra.Models.SubscriptionTier.Enterprise)
+                        {
+                            <span class="badge bg-primary">Current Plan</span>
+                        }
+                    </div>
+                    <p class="text-muted small">Full-scale infrastructure and dedicated isolation.</p>
+                    <div class="my-3">
+                        <h2 class="fw-bold text-dark mb-0">R1,999.00</h2>
+                        <small class="text-muted">billed monthly in ZAR</small>
+                    </div>
+                    <ul class="list-unstyled my-3 small text-muted flex-grow-1">
+                        <li class="mb-2">✔ Dedicated database isolation</li>
+                        <li class="mb-2">✔ Custom webhook destinations</li>
+                        <li class="mb-2">✔ 24/7 Dedicated account manager</li>
+                        <li class="mb-2">✔ 99.99% uptime guarantee</li>
+                    </ul>
+
+                    @if (currentTier == Tierra.Models.SubscriptionTier.Enterprise)
+                    {
+                        <button class="btn btn-secondary w-100" disabled>Active Plan</button>
+                    }
+                    else
+                    {
+                        <form asp-action="ChangePlan" method="post">
+                            <input type="hidden" name="targetTier" value="Enterprise" />
+                            <button type="submit" class="btn btn-outline-primary w-100">Upgrade to Enterprise</button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Invoices & Billing History -->
+    <div class="card shadow-sm border-0 rounded-3">
+        <div class="card-header bg-white py-3 border-0">
+            <div class="d-flex justify-content-between align-items-center">
+                <h5 class="fw-bold mb-0">📄 Invoices & Billing History</h5>
+                <span class="badge bg-light text-muted border">Filtered by Active Tenant</span>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Invoice #</th>
+                        <th>Issued Date</th>
+                        <th>Due Date</th>
+                        <th>Amount</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (!invoices.Any())
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center py-4 text-muted">
+                                No billing invoices generated yet. Upgrade to Pro or Enterprise to simulate billing events!
+                            </td>
+                        </tr>
+                    }
+                    else
+                    {
+                        @foreach (var inv in invoices)
+                        {
+                            <tr>
+                                <td class="ps-4 fw-semibold text-primary"><code>@inv.InvoiceNumber</code></td>
+                                <td class="text-muted">@inv.CreatedAt.ToString("MMM dd, yyyy HH:mm")</td>
+                                <td class="text-muted">@inv.DueDate.ToString("MMM dd, yyyy")</td>
+                                <td class="fw-bold">R@inv.Amount.ToString("N2") <small class="text-muted">@inv.Currency</small></td>
+                                <td>
+                                    @if (inv.Status == Tierra.Models.InvoiceStatus.Paid)
+                                    {
+                                        <span class="badge bg-success-subtle text-success border border-success">Paid</span>
+                                    }
+                                    else if (inv.Status == Tierra.Models.InvoiceStatus.Pending)
+                                    {
+                                        <span class="badge bg-warning-subtle text-warning border border-warning">Pending</span>
+                                    }
+                                    else
+                                    {
+                                        <span class="badge bg-danger-subtle text-danger border border-danger">Failed</span>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

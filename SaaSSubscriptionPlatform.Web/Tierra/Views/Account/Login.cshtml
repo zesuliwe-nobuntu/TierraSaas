@@ -1,0 +1,97 @@
+@model Tierra.Models.LoginViewModel
+@{
+    ViewData["Title"] = "Log In";
+}
+
+<div class="row justify-content-center mt-4 mb-5">
+    <div class="col-md-6 col-lg-5">
+        <!-- Main Login Card -->
+        <div class="card shadow border-0 rounded-3 mb-4">
+            <div class="card-body p-4 p-md-5">
+                <div class="text-center mb-4">
+                    <span class="fs-1">🌍</span>
+                    <h2 class="fw-bold text-primary mt-2">Tierra</h2>
+                    <p class="text-muted">Sign in to your isolated workspace</p>
+                </div>
+
+                <form asp-action="Login" method="post">
+                    <input type="hidden" asp-for="ReturnUrl" />
+                    <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                    <div class="mb-3">
+                        <label asp-for="Email" class="form-label fw-semibold"></label>
+                        <input asp-for="Email" class="form-control" placeholder="name@company.com" autofocus />
+                        <span asp-validation-for="Email" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="Password" class="form-label fw-semibold"></label>
+                        <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                        <span asp-validation-for="Password" class="text-danger small"></span>
+                    </div>
+
+                    <div class="mb-4 form-check">
+                        <input asp-for="RememberMe" class="form-check-input" />
+                        <label asp-for="RememberMe" class="form-check-label text-muted small"></label>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary btn-lg">Sign In</button>
+                    </div>
+                </form>
+            </div>
+            <div class="card-footer bg-light text-center py-3">
+                <small class="text-muted">Need a new workspace? <a asp-controller="Onboarding" asp-action="Index" class="text-decoration-none">Register business</a></small>
+            </div>
+        </div>
+
+        <!-- 1-Click Demo Persona Switcher (For Interviews & Testing) -->
+        <div class="card shadow-sm border-0 rounded-3 bg-white">
+            <div class="card-body p-4">
+                <div class="text-center mb-3">
+                    <span class="badge bg-dark px-3 py-1 mb-1">Portfolio Showcase Tool</span>
+                    <h6 class="fw-bold text-dark mb-0">⚡ 1-Click Role-Based Demo Login</h6>
+                    <small class="text-muted">Instantly explore the platform through any of the 4 personas:</small>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <form asp-action="DemoLogin" method="post">
+                        <input type="hidden" name="role" value="ITManager" />
+                        <button type="submit" class="btn btn-outline-danger w-100 text-start py-2">
+                            <strong>🛠️ IT Manager</strong> <span class="badge bg-danger-subtle text-danger ms-2">Platform SuperAdmin</span>
+                            <div class="small text-muted">Hangfire workers, DB isolation telemetry, system SLA</div>
+                        </button>
+                    </form>
+
+                    <form asp-action="DemoLogin" method="post">
+                        <input type="hidden" name="role" value="Owner" />
+                        <button type="submit" class="btn btn-outline-primary w-100 text-start py-2">
+                            <strong>💼 Business Owner</strong> <span class="badge bg-primary-subtle text-primary ms-2">Executive</span>
+                            <div class="small text-muted">ZAR Billing, plan upgrades, invoice history</div>
+                        </button>
+                    </form>
+
+                    <form asp-action="DemoLogin" method="post">
+                        <input type="hidden" name="role" value="Admin" />
+                        <button type="submit" class="btn btn-outline-info w-100 text-start py-2">
+                            <strong>👥 Tenant Admin</strong> <span class="badge bg-info-subtle text-info ms-2">Operations</span>
+                            <div class="small text-muted">Team roster, member management, workspace profile</div>
+                        </button>
+                    </form>
+
+                    <form asp-action="DemoLogin" method="post">
+                        <input type="hidden" name="role" value="EndUser" />
+                        <button type="submit" class="btn btn-outline-secondary w-100 text-start py-2">
+                            <strong>👤 End User</strong> <span class="badge bg-secondary-subtle text-secondary ms-2">Standard Member</span>
+                            <div class="small text-muted">Workspace overview, clean profile, no billing clutter</div>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

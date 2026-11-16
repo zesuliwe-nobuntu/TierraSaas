@@ -1,0 +1,21 @@
+@{
+    ViewData["Title"] = "Access Denied";
+}
+
+<div class="row justify-content-center mt-5">
+    <div class="col-md-6 text-center">
+        <div class="card shadow-sm border-0 p-5 rounded-3">
+            <span class="display-1 text-danger">🛡️</span>
+            <h2 class="fw-bold text-danger mt-3">Access Denied</h2>
+            <h5 class="text-muted mb-4">Role-Based Access Control (RBAC) Barrier</h5>
+            
+            <div class="alert alert-warning text-start">
+                <strong>Insufficient Permissions:</strong> Your user role in this workspace does not permit you to view financial invoices or alter subscription plans. Only <strong>Owners</strong> and <strong>Admins</strong> have billing access.
+            </div>
+
+            <div class="mt-3">
+                <a asp-controller="Home" asp-action="Index" class="btn btn-primary">Return to Dashboard</a>
+            </div>
+        </div>
+    </div>
+</div>

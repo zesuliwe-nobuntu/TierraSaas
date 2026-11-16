@@ -1,0 +1,103 @@
+@inject Tierra.Services.ITenantService TenantService
+@inject Tierra.Data.TierraDbContext DbContext
+@{
+    var activeTenantId = TenantService.GetTenantId();
+    string? activeTenantName = null;
+    if (activeTenantId.HasValue)
+    {
+        activeTenantName = DbContext.Tenants.FirstOrDefault(t => t.Id == activeTenantId.Value)?.Name;
+    }
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Tierra</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+</head>
+<body class="bg-light">
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-info" asp-controller="Home" asp-action="Index">
+                    🌍 Tierra
+                </a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#tierraNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="tierraNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Dashboard</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Onboarding" asp-action="Workspaces">Workspaces</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Billing" asp-action="Index">Billing & Plans</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-warning fw-semibold" href="/hangfire" target="_blank">⚡ Jobs Dashboard</a>
+                        </li>
+                    </ul>
+                    <ul class="navbar-nav align-items-center gap-2">
+                        @if (activeTenantName != null)
+                        {
+                            <li class="nav-item">
+                                <span class="badge bg-secondary p-2 text-wrap">
+                                    🏢 <strong class="text-warning">@activeTenantName</strong>
+                                </span>
+                            </li>
+                        }
+
+                        @if (User.Identity?.IsAuthenticated == true)
+                        {
+                            var role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value ?? "EndUser";
+                            <li class="nav-item">
+                                <span class="badge bg-dark border border-secondary text-light p-2">
+                                    👤 <strong>@User.Identity.Name</strong>
+                                    <span class="badge bg-warning text-dark ms-1">@role</span>
+                                </span>
+                            </li>
+                            <li class="nav-item">
+                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger">Log Out</button>
+                                </form>
+                            </li>
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-light" asp-controller="Account" asp-action="Login">Log In</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn btn-sm btn-info fw-semibold" asp-controller="Onboarding" asp-action="Index">+ New Tenant</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container py-4">
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show shadow-sm" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            </div>
+        }
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

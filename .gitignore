@@ -1,0 +1,42 @@
+## .NET Core / C# standard ignore
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio & VS Code
+.vs/
+.vscode/
+*.user
+*.userosscache
+*.suo
+*.userprefs
+*.ide/
+
+## Temporary files & test scripts
+*.tmp
+*.log
+scratch/
+test_*.ps1
+test_*.bat
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+[Aa]rm/
+[Aa]rm64/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## SQL Server LocalDB
+*.mdf
+*.ldf
+
+## OS generated files
+.DS_Store
+Thumbs.db

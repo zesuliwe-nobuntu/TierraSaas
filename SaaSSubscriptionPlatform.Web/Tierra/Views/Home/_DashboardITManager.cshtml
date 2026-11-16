@@ -1,0 +1,120 @@
+@model Tierra.Models.Tenant
+@inject Tierra.Data.TierraDbContext DbContext
+@using Microsoft.EntityFrameworkCore
+@{
+    var totalTenants = await DbContext.Tenants.CountAsync();
+    var totalInvoices = await DbContext.Invoices.IgnoreQueryFilters().CountAsync();
+    var totalUsers = await DbContext.Users.IgnoreQueryFilters().CountAsync();
+}
+
+<div class="mb-4">
+    <div class="d-flex justify-content-between align-items-center">
+        <div>
+            <span class="badge bg-danger px-3 py-2 rounded-pill fw-semibold mb-2">Platform Administration</span>
+            <h2 class="fw-bold">🛠️ IT Infrastructure & Systems Portal</h2>
+            <p class="text-muted">High-level systems telemetry, Hangfire jobs, and database isolation monitoring.</p>
+        </div>
+        <a href="/hangfire" target="_blank" class="btn btn-warning fw-semibold shadow-sm">
+            ⚡ Open Hangfire Mission Control
+        </a>
+    </div>
+</div>
+
+<!-- Health Banner -->
+<div class="alert alert-success d-flex align-items-center justify-content-between shadow-sm border-0 py-3 mb-4">
+    <div class="d-flex align-items-center">
+        <span class="fs-3 me-3">🟢</span>
+        <div>
+            <strong class="d-block">All Systems Operational</strong>
+            <small class="text-muted">SQL Server LocalDB & Hangfire Background Workers are running healthy.</small>
+        </div>
+    </div>
+    <span class="badge bg-success-subtle text-success border border-success px-3 py-2">SLA: 99.99%</span>
+</div>
+
+<!-- Telemetry Stats -->
+<div class="row g-4 mb-4">
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold small mb-2">REGISTERED TENANTS</h6>
+                <h2 class="fw-bold text-dark mb-0">@totalTenants</h2>
+                <small class="text-muted">Isolated database plots</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold small mb-2">SYSTEM USERS</h6>
+                <h2 class="fw-bold text-primary mb-0">@totalUsers</h2>
+                <small class="text-muted">Across all customer workspaces</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold small mb-2">TOTAL INVOICES ISSUED</h6>
+                <h2 class="fw-bold text-success mb-0">@totalInvoices</h2>
+                <small class="text-muted">Simulated webhook events</small>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card shadow-sm border-0 h-100">
+            <div class="card-body p-4">
+                <h6 class="text-muted fw-bold small mb-2">BACKGROUND JOBS</h6>
+                <h2 class="fw-bold text-warning mb-0">Active</h2>
+                <small class="text-muted">Daily renewal cron scheduled</small>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Technical Architecture Checklist -->
+<div class="card shadow-sm border-0 rounded-3 mb-4">
+    <div class="card-header bg-white py-3 border-0">
+        <h5 class="fw-bold mb-0">🔒 Security & Multi-Tenancy Diagnostic Audit</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table align-middle table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">Subsystem</th>
+                        <th>Architecture Pattern</th>
+                        <th>Status</th>
+                        <th>Details</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="ps-4 fw-semibold">Data Isolation</td>
+                        <td>EF Core Global Query Filters</td>
+                        <td><span class="badge bg-success">Enforced</span></td>
+                        <td>Auto-appends <code>WHERE TenantId = @@currentTenant</code></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-semibold">Entity Integrity</td>
+                        <td>Automatic ChangeTracker Stamping</td>
+                        <td><span class="badge bg-success">Active</span></td>
+                        <td>Injects <code>TenantId</code> on <code>SaveChangesAsync()</code></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-semibold">Background Processing</td>
+                        <td>Hangfire + SQL Server Storage</td>
+                        <td><span class="badge bg-success">Running</span></td>
+                        <td>Cross-tenant scanning via <code>.IgnoreQueryFilters()</code></td>
+                    </tr>
+                    <tr>
+                        <td class="ps-4 fw-semibold">RBAC Authentication</td>
+                        <td>ASP.NET Core Claims Cookie</td>
+                        <td><span class="badge bg-success">Secured</span></td>
+                        <td>Cryptographically tamper-proof identity claims</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
