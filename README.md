@@ -150,7 +150,7 @@ dotnet ef database update
 ```powershell
 dotnet run
 ```
-Navigate to `http://localhost:5000` in your web browser.
+Navigate to `http://localhost:5001` in your web browser.
 
 ---
 
